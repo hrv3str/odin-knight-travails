@@ -13,7 +13,35 @@
         <h1 class="title">Knights Travails</h1>
     </div>
     <div class="aside">
-        <div class="plate"></div>
+        <div class="plate">
+                <div class="plate start">
+                    <div class="title">
+                        Drag-and-drop this knight to the cell you want to start with
+                    </div>
+                    <div class="knight-landing">
+                        <div id="knight"
+                            class="knight"
+                            draggable="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="plate start">
+                    <div class="title">
+                        Drag-and-drop this mark to the cell you want to finish in
+                    </div>
+                    <div class="target-landing">
+                        <div class="target"
+                            id="target"
+                            draggable="true"></div>
+                    </div>
+                </div>
+                <div class="plate controls">
+                    <div class="title">Knight is at:<span></span></div>
+                    <div class="title">Mark is at:<span></span></div>
+                    <button class="plate">Hit it!</button>
+                    <button class="plate">Reset positions</button>
+                </div>
+        </div>
     </div>
     <div class="main">
         <div class="chessboard plate"

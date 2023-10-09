@@ -1,6 +1,10 @@
 class Display {
     constructor() {
+        this.knight = document.getElementById('knight');
         this.chessboard = document.getElementById('chessboard');
+        this.target = document.getElementById('target');
+        this.init = this.fillBoard();
+        this.isDragging = false;
     }
 
     fillBoard() {
@@ -136,6 +140,84 @@ class Display {
         fillVertical();
         fillHorisontal();
         assignData();
+
+        return true;
+    }
+
+    handleElementsDragging() {
+        this.knight.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', 'knight');
+            this.isDragging = true;
+            const landing = this.knight.parentNode;
+            landing.classList.remove('knight-landing');
+            
+        })
+
+        this.target.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', 'target');
+            this.isDragging = true;
+            const landing = this.target.parentNode;
+            landing.classList.remove('target-landing');
+            
+        })
+
+        this.knight.addEventListener('dragend', () => {
+            this.isDragging = false;
+            const hovers = document.querySelectorAll('div.hover');
+            if (hovers.length) {
+                hovers.forEach(hover => hover.classList.remove('hover'));
+            }
+        })
+
+        this.target.addEventListener('dragend', () => {
+            this.isDragging = false;
+            const hovers = document.querySelectorAll('div.hover');
+            if (hovers.length) {
+                hovers.forEach(hover => hover.classList.remove('hover'));
+            }
+        })
+
+        this.chessboard.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const target = e.target;
+            let name = undefined;
+            if (target.dataset.name !== undefined) name = target.dataset.name;
+            if (this.isDragging && name !== undefined) {
+                const cell = document.querySelector(`div[data-name=${name}]`);
+                cell.classList.add('hovered');
+            }
+        })
+
+        this.chessboard.addEventListener('dragleave', (e) => {
+            const target = e.target;
+            let name = undefined;
+            if (target.dataset.name !== undefined) name = target.dataset.name;
+            if (name !== undefined) {
+                const cell = document.querySelector(`div[data-name=${name}]`);
+                cell.classList.remove('hovered');
+            }
+        })
+
+        this.chessboard.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const target = e.target;
+            const data = e.dataTransfer.getData('text/plain')
+            let name = undefined;
+            if (target.dataset.name !== undefined) name = target.dataset.name;
+            if (this.isDragging && name !== undefined) {
+                const cell = document.querySelector(`div[data-name=${name}]`);
+                if (data === 'knight') {
+                    cell.appendChild(this.knight);
+                    cell.classList.add('knight-landing');
+                }
+                else if (data === 'target') {
+                    cell.appendChild(this.target);
+                    cell.classList.add('target-landing');
+                };
+                this.isDragging = false;
+                cell.classList.remove('hovered');
+            }
+        })
     }
 }
 

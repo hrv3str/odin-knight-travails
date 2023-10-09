@@ -5,4 +5,4 @@ import Display from './modules/UI.js'
 
 const display = new Display;
 
-display.fillBoard();
+display.handleElementsDragging();

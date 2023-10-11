@@ -51,7 +51,48 @@ body {
     display: grid;
     grid-template-columns: 1fr auto;
     height: fit-content;
-    width: 90%;
+    align-items: center;
+    justify-items: center;
+    line-height: 1.6rem;
+}
+
+.controls {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+button {
+    color: var(--c-white);
+    font-weight: 700;
+    text-shadow: 0 0 5px var(--c-black);
+}
+
+button:hover {
+    cursor: pointer;
+    transform: scaleX(1.02);
+    box-shadow: 0 0 5px var(--c-blue-one);
+}
+
+button:active {
+    transform: scaleX(0.98);
+    box-shadow: 0 0 3px var(--c-black);
+    text-shadow: 0 0 3px var(--c-blue-one);
+}
+
+.console {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    text-shadow: 0 0 5px var(--c-glassy-two);
+    font-weight: 600;
+    gap: 0.5rem;
+    flex-grow: 1;
+    background-color: var(--c-glassy-two);
+    border-radius: 1rem;
+    padding: 1rem;
+    color: var(--c-black);
 }
 
 .title {
@@ -76,7 +117,8 @@ body {
 .aside > .plate {
     width: 90%;
     height: 90%;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     grid-template-rows: repeat(2, auto) 1fr;
 }
@@ -151,17 +193,17 @@ body {
 
 .knight,
 .target {
-    position: relative;
     height: calc(var(--c-side) * 0.90);
     width: calc(var(--c-side) * 0.90);
     background-position: center;
     background-repeat: no-repeat;
     cursor: move;
-    -webkit-user-drag: element;
 }
 
 .knight {
     background-image: url(./assets/chess-knight.svg);
+    transition: all 1000ms ease-in-out;
+    z-index: 5;
 }
 
 .target {
@@ -177,3 +219,10 @@ body {
     height: var(--c-side);
     width: var(--c-side);
 }
+
+.transition {
+    transition: all 50ms ease-out;
+}
+
+
+  

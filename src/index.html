@@ -18,7 +18,8 @@
                     <div class="title">
                         Drag-and-drop this knight to the cell you want to start with
                     </div>
-                    <div class="knight-landing">
+                    <div class="knight-landing"
+                        id="knight-park">
                         <div id="knight"
                             class="knight"
                             draggable="true">
@@ -29,17 +30,24 @@
                     <div class="title">
                         Drag-and-drop this mark to the cell you want to finish in
                     </div>
-                    <div class="target-landing">
+                    <div class="target-landing"
+                        id="target-park">
                         <div class="target"
                             id="target"
                             draggable="true"></div>
                     </div>
                 </div>
                 <div class="plate controls">
-                    <div class="title">Knight is at:<span></span></div>
-                    <div class="title">Mark is at:<span></span></div>
-                    <button class="plate">Hit it!</button>
+                    <div class="title">Knight is at:<span id="knight-position"> __</span></div>
+                    <div class="title">Mark is at:<span id="target-position"> __</span></div>
+                    <button class="plate"
+                        id="launch-button">
+                            Travail
+                    </button>
                     <button class="plate">Reset positions</button>
+                    <div class="console"
+                        id="console">
+                    </div>
                 </div>
         </div>
     </div>

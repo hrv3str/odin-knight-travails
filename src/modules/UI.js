@@ -1,13 +1,20 @@
 class Display {
     constructor() {
         this.knight = document.getElementById('knight');
+        this.knightPark = document.getElementById('knight-park');
         this.chessboard = document.getElementById('chessboard');
         this.target = document.getElementById('target');
-        this.init = this.fillBoard();
+        this.targetPark = document.getElementById('target-park');
+        this.knightPosition = document.getElementById('knight-position');
+        this.targetPosition = document.getElementById('target-position');
+        this.cons = document.getElementById('console');
+        this.init = this.initiate();
         this.isDragging = false;
+        this.start = [];
+        this.finish = [];
     }
 
-    fillBoard() {
+    initiate() {
         const createBlackCell = () => {
             const cell = document.createElement('div');
             cell.classList.add('black');
@@ -140,11 +147,18 @@ class Display {
         fillVertical();
         fillHorisontal();
         assignData();
+        this.handleElementsDragging();
+        this.enableButtonTransitions();
 
         return true;
     }
 
     handleElementsDragging() {
+        const updatePosition = (cell, element) => {
+            const pos = cell.dataset.name;
+            element.textContent = ' ' + pos;
+        }
+
         this.knight.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text/plain', 'knight');
             this.isDragging = true;
@@ -206,17 +220,113 @@ class Display {
             if (target.dataset.name !== undefined) name = target.dataset.name;
             if (this.isDragging && name !== undefined) {
                 const cell = document.querySelector(`div[data-name=${name}]`);
+
                 if (data === 'knight') {
-                    cell.appendChild(this.knight);
+                    cell.appendChild(this.knight);                   
                     cell.classList.add('knight-landing');
+                    updatePosition(cell, this.knightPosition);
+                    const startX = Number(cell.dataset.x);
+                    const startY = Number(cell.dataset.y);
+                    this.start = [startX, startY];
+                    this.log(`Knight is placed on ${cell.dataset.name}`)
+                    console.log(this.start);
                 }
                 else if (data === 'target') {
                     cell.appendChild(this.target);
                     cell.classList.add('target-landing');
+                    updatePosition(cell, this.targetPosition);
+                    const finishX = Number(cell.dataset.x);
+                    const finishY = Number(cell.dataset.y);
+                    this.finish = [finishX, finishY];
+                    this.log(`Mark is placed on ${cell.dataset.name}`);
+                    console.log(this.finish);
                 };
+
                 this.isDragging = false;
                 cell.classList.remove('hovered');
             }
+        })
+    }
+
+    enableButtonTransitions() {
+        const addTransitions = () => {
+            removeEventListener('DOMContentLoaded', addTransitions);
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach((button) => {
+                button.classList.add('.transition');
+            });
+        }
+        document.addEventListener('DOMContentLoaded', addTransitions);
+    }
+
+    log(message) {
+        const body = document.createElement('div');
+        body.classList.add('message');
+        body.textContent = message;
+        this.cons.appendChild(body);
+    }
+
+    handleTravail(array) {
+        if (!this.start.length || !this.finish.length) {
+            this.log('Please place knight and target markers on the board before the start!');
+            return
+        }
+
+        this.log('Travail begins!');
+        this.targetPark.appendChild(this.target);
+        const qq = [];
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        array.forEach((item) => {
+            const [x, y] = item;
+            const element = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+            qq.push(element);
+        })
+
+        qq.forEach(async (item) => {
+            const multiplier = qq.indexOf(item);
+            await delay(100 * multiplier);
+            await item.classList.add('hovered');
+        })
+
+        let translateX = 0;
+        let translateY = 0;
+
+        const endroad = () => {
+            this.knight.removeEventListener('transitionend', endroad);
+            const destination = qq[qq.length - 1];
+            this.knight.style.transform = 'translate(0, 0)'
+            destination.appendChild(this.knight);
+        }
+
+        qq.forEach(async (item) => {
+            const i = qq.indexOf(item);
+            const name = item.dataset.name
+
+            await delay(1000 * i);
+            if (i === 0) this.log(`Start at ${name},`);
+            else if (i === qq.length - 1) {
+                this.log(`and finish at ${name}!`);
+                this.knight.addEventListener('transitionend', endroad);
+            } else this.log(`then go to ${name},`);
+
+            const cur = array[i];
+            const next = array[i + 1];
+            if (next) {
+                const [x, y] = cur;
+                const [nextX, nextY] = next;
+                
+                const deltaX = Math.abs(nextX - x);
+                const deltaY = Math.abs(nextY - y);
+
+                if (nextX > x) translateX += deltaX;
+                else translateX -= deltaX;
+                if (nextY < y) translateY += deltaY;
+                else translateY -= deltaY;
+            }
+
+            this.knight.style.transform = `translate(calc(var(--c-side) * ${translateX}), calc(var(--c-side) * ${translateY}))`;
+            await item.classList.remove('hovered');
         })
     }
 }

@@ -1,5 +1,6 @@
 class Display {
     constructor() {
+        this.startButton = document.getElementById("launch-button");
         this.knight = document.getElementById('knight');
         this.knightPark = document.getElementById('knight-park');
         this.chessboard = document.getElementById('chessboard');
@@ -223,7 +224,7 @@ class Display {
 
                 if (data === 'knight') {
                     cell.appendChild(this.knight);                   
-                    cell.classList.add('knight-landing');
+                    cell.classList.add('landing');
                     updatePosition(cell, this.knightPosition);
                     const startX = Number(cell.dataset.x);
                     const startY = Number(cell.dataset.y);
@@ -233,7 +234,7 @@ class Display {
                 }
                 else if (data === 'target') {
                     cell.appendChild(this.target);
-                    cell.classList.add('target-landing');
+                    cell.classList.add('landing');
                     updatePosition(cell, this.targetPosition);
                     const finishX = Number(cell.dataset.x);
                     const finishY = Number(cell.dataset.y);
@@ -253,7 +254,7 @@ class Display {
             removeEventListener('DOMContentLoaded', addTransitions);
             const buttons = document.querySelectorAll('button');
             buttons.forEach((button) => {
-                button.classList.add('.transition');
+                button.style.transition = "all 50ms ease-out";
             });
         }
         document.addEventListener('DOMContentLoaded', addTransitions);
@@ -264,6 +265,8 @@ class Display {
         body.classList.add('message');
         body.textContent = message;
         this.cons.appendChild(body);
+        body.scrollIntoView( {behavior: 'smooth'} );
+        body.style.opacity = '1';
     }
 
     handleTravail(array) {
@@ -272,8 +275,19 @@ class Display {
             return
         }
 
+        const landings = document.querySelectorAll('div.landing');
+
+        this.startButton.classList.add('blocked');
+        this.knight.style.transition = 'all 1000ms ease-in-out';
         this.log('Travail begins!');
+        this.start = [...this.finish]
+        this.finish = [];
         this.targetPark.appendChild(this.target);
+        
+        this.targetPark.classList.add('landing');
+        this.targetPosition.textContent = '__';
+
+
         const qq = [];
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -295,8 +309,18 @@ class Display {
         const endroad = () => {
             this.knight.removeEventListener('transitionend', endroad);
             const destination = qq[qq.length - 1];
-            this.knight.style.transform = 'translate(0, 0)'
+            this.knight.style.transform = 'translate(0, 0)';
+            this.knight.style.transition = 'none';
+
+            landings.forEach((item) => {
+                item.classList.remove('landing')
+            })
+
             destination.appendChild(this.knight);
+            destination.classList.add('landing');
+            this.targetPark.classList.add('landing');
+            this.knightPosition.textContent = destination.dataset.name;
+            this.startButton.classList.remove('blocked');
         }
 
         qq.forEach(async (item) => {

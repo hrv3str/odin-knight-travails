@@ -1,5 +1,7 @@
 # Odin Knight Travails
 
+![image](./src/assets/background.jpg)
+
 ## Introduction
 
 Odin Knight Travails is a web application that visualizes a problem involving finding the shortest path for a knight on a chessboard, using the breadth-first search algorithm. This project is a solution for a lesson on [The Odin Project](https://www.theodinproject.com/lessons/javascript-knights-travails). It allows users to interact with a chessboard, place a knight figure as a starting point, mark a target cell, and then run the algorithm to find and visualize the shortest path.
